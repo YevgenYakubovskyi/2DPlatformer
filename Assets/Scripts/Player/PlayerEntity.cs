@@ -9,9 +9,12 @@ namespace Player
     public class PlayerEntity : MonoBehaviour
     {
         
-        private Rigidbody2D _rigitbody;
+        private Rigidbody2D _rigidbody;
         private BoxCollider2D _collider2D;
         private bool _isJumping;
+
+        private Animator _anim;
+        private bool _isRunning;
         
         
         [Header("HorizontalMovement")]
@@ -27,36 +30,46 @@ namespace Player
         // Start is called before the first frame update
         private void Start()
         {
-            _rigitbody = GetComponent<Rigidbody2D>();
+            _rigidbody = GetComponent<Rigidbody2D>();
             _collider2D = GetComponent<BoxCollider2D>();
+            _anim = GetComponent<Animator>();
         }
 
         private void Update()
         {
             if(_isJumping)
                 UpdateJump();
+
+            _anim.SetBool("IsRunning", _isRunning);
+            _anim.SetBool("IsGrounded", IsGrounded());
+            Debug.Log(IsGrounded());
         }
 
         public void MoveHorizontally(float direction)
         {
             SetDirection(direction);
-            Vector2 velocity = _rigitbody.velocity;
+            Vector2 velocity = _rigidbody.velocity;
             velocity.x = direction * _horizontalSpeed;
-            _rigitbody.velocity = velocity;
+            _rigidbody.velocity = velocity;
+            _isRunning = direction != 0;
+            
+            
         }
-        public void MoveVertically(float direction)
-        {
-            if(_isJumping)
-                return;
-        }
-
         public void Jump()
         {
             if(!IsGrounded())
                 return;
-            _rigitbody.velocity = new Vector2(0, _jumpForce);
-            // _rigitbody.AddForce(Vector2.up * _jumpForce);
-            _rigitbody.gravityScale = _gravityScale;
+            _anim.SetTrigger("Jump");
+            _rigidbody.velocity = new Vector2(0, _jumpForce);
+            _rigidbody.gravityScale = _gravityScale;
+        }
+        public void Fire()
+        {
+            _anim.SetBool("IsShooting", true);
+        }
+        public void StopFire()
+        {
+            _anim.SetBool("IsShooting", false);
         }
 
         private void SetDirection(float direction)
@@ -74,14 +87,11 @@ namespace Player
             _direction = _direction == Direction.Right ? Direction.Left : Direction.Right;
             foreach (var cameraPair in _cameras.DirectionalCamera)
                 cameraPair.Value.enabled = cameraPair.Key == _direction;
-            {
-                
-            }
         }
 
         private void UpdateJump()
         {
-            if (_rigitbody.velocity.y <0 )
+            if (_rigidbody.velocity.y <0 )
             {
                 ResetJump();
             }
@@ -94,7 +104,10 @@ namespace Player
         }
         private bool IsGrounded()
         {
-            return Physics2D.BoxCast(_collider2D.bounds.center, _collider2D.bounds.size, 0f, Vector2.down, .1f, _jumpableGround);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1.5f);
+ 
+            
+            return hits.Length > 1;
         }
     }
     
