@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Services.Updater;
 using Player;
+using InputReader;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Core
@@ -11,15 +14,25 @@ namespace Core
         [SerializeField] private GameUIInputView _gameUIInputView;
 
         private ExternalDevicesInputReader _externalDevicesInput;
-        private PlayerBrain _playerBrain;
+        private PlayerSystem _playerSystem;
+        private ProjectUpdater _projectUpdater;
+
+        private List<IDisposable> _disposables;
 
         private bool _onPause = false;
-        
-        
+
+
         private void Awake()
         {
+            _disposables = new List<IDisposable>();
+            if (ProjectUpdater.Instance == null)
+                _projectUpdater = new GameObject().AddComponent<ProjectUpdater>();
+            else
+                _projectUpdater = ProjectUpdater.Instance as ProjectUpdater;
+
             _externalDevicesInput = new ExternalDevicesInputReader();
-            _playerBrain = new PlayerBrain(_playerEntity, new List<IEntityInputSource>
+            _disposables.Add(_externalDevicesInput);
+            _playerSystem = new PlayerSystem(_playerEntity, new List<IEntityInputSource>
             {
                 _gameUIInputView,
                 _externalDevicesInput
@@ -28,18 +41,17 @@ namespace Core
 
         private void Update()
         {
-            if (_onPause)
-                return;
-            
-            _externalDevicesInput.OnUpdate();
+            if (Input.GetKeyDown(KeyCode.Escape))
+                _projectUpdater.IsPaused = !_projectUpdater.IsPaused;
+
         }
 
-        private void FixedUpdate()
+        private void OnDestroy()
         {
-            if (_onPause)
-                return;
-            
-            _playerBrain.OnFixedUpdate();
+            foreach (var disposable in _disposables)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 02193a63275251f43bf38f9196fec83b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db6b99805c1cfb14cac1aef6808abff9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -544,7 +544,7 @@ GameObject:
   - component: {fileID: 590689162}
   - component: {fileID: 590689161}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -650,7 +650,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.28500938, y: 0}
+  m_Offset: {x: -0.18701601, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -661,7 +661,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.8049812, y: 2.25}
+  m_Size: {x: 1.0021467, y: 2.25}
   m_EdgeRadius: 0
 --- !u!50 &590689160
 Rigidbody2D:
@@ -708,13 +708,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af3e9aa3499a23449bd7792d4acac9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _horizontalSpeed: 8
-  _direction: 0
-  _jumpForce: 18
-  _gravityScale: 5
-  _jumpableGround:
-    serializedVersion: 2
-    m_Bits: 64
+  _horizontalMovementData:
+    <HorizontalSpeed>k__BackingField: 8
+    <Direction>k__BackingField: 0
+  _jumpData:
+    <JumpForce>k__BackingField: 20
+    <GravityScale>k__BackingField: 8
   _cameras:
     _rightCamera: {fileID: 1175690807}
     _leftCamera: {fileID: 1713013398}
