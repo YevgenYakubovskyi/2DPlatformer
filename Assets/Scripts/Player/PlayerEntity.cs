@@ -1,5 +1,6 @@
 using Core.Movement.Controller;
 using Core.Movement.Data;
+using StatsSystem;
 using UnityEngine;
 
 namespace Player
@@ -24,12 +25,12 @@ namespace Player
 
         [SerializeField] private DirectionalCameraPair _cameras;
         
-        private void Start()
+        public void Initialize(IStatValueGiver statValueGiver)
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _collider2D = GetComponent<BoxCollider2D>();
             _anim = GetComponent<Animator>();
-            _horizontalMover = new HorizontalMover(_rigidbody, _horizontalMovementData);
+            _horizontalMover = new HorizontalMover(_rigidbody, _horizontalMovementData, statValueGiver);
             _jumper = new Jumper(_rigidbody, _jumpData);
         }
 
