@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace InputReader
+namespace Player
 {
     public class GameUIInputView : MonoBehaviour, IEntityInputSource
     {
