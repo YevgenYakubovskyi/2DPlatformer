@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Core.Services.Updater;
-using InputReader;
 
 namespace Player
 {
-    public class PlayerBrain : IDisposable
+    public class PlayerBrain
     {
         private readonly PlayerEntity _playerEntity;
         private readonly List<IEntityInputSource> _inputSources;
@@ -14,10 +11,9 @@ namespace Player
         {
             _playerEntity = playerEntity;
             _inputSources = inputSources;
-            ProjectUpdater.Instance.FixedUpdateCalled += OnFixedUpdate;
         }
 
-        private void OnFixedUpdate()
+        public void OnFixedUpdate()
         {
             _playerEntity.MoveHorizontally(GetHorizontalDirection());
             if(IsJump)
@@ -45,6 +41,5 @@ namespace Player
 
         private bool IsJump => _inputSources.Any(source => source.Jump);
         private bool IsAttack => _inputSources.Any(source => source.Attack);
-        public void Dispose() => ProjectUpdater.Instance.FixedUpdateCalled -= OnFixedUpdate;
     }
 }
